@@ -23,13 +23,13 @@ BOT_TOKEN = environ['BOT_TOKEN']
 #                    DATABASE (MongoDB)
 # =========================================================
 DATABASE_URI = environ.get('DATABASE_URI', "")
-DATABASE_NAME = environ.get('DATABASE_NAME', "Simple")
+DATABASE_NAME = environ.get('DATABASE_NAME', "Rajappan")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 
 # =========================================================
 #                    ADMINS & CHANNELS
 # =========================================================
-# सिर्फ ADMINS ही बॉट को इस्तेमाल कर पाएंगे
+# Admin IDs को लिस्ट में कन्वर्ट करना
 ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '').split()]
 
 # जिन चैनल्स से फाइल इंडेक्स करनी है
@@ -44,19 +44,24 @@ LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
 USE_CAPTION_FILTER = is_enabled((environ.get('USE_CAPTION_FILTER', "True")), True)
 
-# लिंक मोड में यह तय करेगा कि कंटेंट फॉरवर्ड (Protect) होगा या नहीं
+# लिंक मोड में यह तय करेगा कि कंटेंट फॉरवर्ड (Protect/Restricted) होगा या नहीं
 PROTECT_CONTENT = is_enabled((environ.get('PROTECT_CONTENT', "False")), False)
 
 # अगर आप चाहते हैं कि फाइल के साथ कोई कस्टम कैप्शन जाए
 CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", None)
 
-# सर्च में दिखने वाली तस्वीरें (अगर कोई फोटो नहीं मिली तो)
-PICS = (environ.get('PICS', 'https://telegra.ph/file/7e56d907542396289fee4.jpg https://telegra.ph/file/9aa8dd372f4739fe02d85.jpg')).split()
+# =========================================================
+#                    PICS & UI SETTINGS
+# =========================================================
+# अगर PICS में लिंक है तो फोटो दिखेगी, नहीं तो लिस्ट खाली रहेगी (Text Only Mode)
+PICS_STR = environ.get('PICS', '')
+PICS = PICS_STR.split() if PICS_STR else []
 
 # =========================================================
-#                    LOGGING (Startup)
+#                    LOGGING STRING
 # =========================================================
 LOG_STR = "Current Customized Configurations are:-\n"
 LOG_STR += (f"CUSTOM_FILE_CAPTION enabled with value {CUSTOM_FILE_CAPTION}\n" if CUSTOM_FILE_CAPTION else "No CUSTOM_FILE_CAPTION Found.\n")
 LOG_STR += ("PROTECT_CONTENT is enabled.\n" if PROTECT_CONTENT else "PROTECT_CONTENT is disabled.\n")
+LOG_STR += (f"PICS Found: {len(PICS)} images configured.\n" if PICS else "No PICS found, Bot will use Text-Only mode.\n")
 
